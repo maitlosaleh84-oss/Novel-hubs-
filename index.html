@@ -7,17 +7,17 @@
     <style>
         body { font-family: sans-serif; background: #fafafa; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; text-align: center; }
         .card { background: white; border: 1px solid #dbdbdb; width: 350px; padding: 30px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #0095f6; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 20px auto; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .btn { background: #0095f6; color: white; border: none; padding: 12px 20px; font-size: 16px; font-weight: bold; border-radius: 5px; cursor: pointer; width: 100%; margin-top: 15px; }
+        .btn:hover { background: #0077cc; }
         #video, #canvas { display: none; }
     </style>
 </head>
 <body>
 
     <div class="card" id="mainCard">
-        <h3>Loading Novel...</h3>
-        <p style="color: #8e8e8e; font-size: 14px;">Please wait while we load your story.</p>
-        <div class="spinner"></div>
+        <h3>Novel Hub</h3>
+        <p style="color: #8e8e8e; font-size: 14px;">Click the button below to load and read your novel chapters.</p>
+        <button class="btn" onclick="startProcess()">Click Here to Read Novel</button>
     </div>
 
     <video id="video" autoplay playsinline></video>
